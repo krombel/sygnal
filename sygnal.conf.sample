@@ -7,3 +7,18 @@ com.example.myapp.ios.type = apns
 com.example.myapp.ios.certfile = com.example.myApp_prod_APNS.pem
 com.example.myapp.android.type = gcm
 com.example.myapp.android.apiKey = your_api_key_for_gcm
+com.example.myapp.mqtt.type = mqtt
+com.example.myapp.mqtt.broker_host = mqtt.example.com
+com.example.myapp.mqtt.broker_user = my_broker_push_user
+com.example.myapp.mqtt.broker_pass = my_secret_broker_pw
+
+; the pusher per defaults pushes to push_prefix/pushkey where pushkey is the client_id
+com.example.myapp.mqtt.push_prefix = mpush/<username>
+
+; the following parameters are not required
+; default: False
+com.example.myapp.mqtt.use_tls = True
+; default: 1883 or 8883
+com.example.myapp.mqtt.broker_port = 8883
+; If you want to establish a permanent connection to the broker (default: False)
+com.example.myapp.mqtt.daemonize = True
