@@ -59,7 +59,8 @@ class MqttPushkin(Pushkin):
         if not self.push_prefix.endswith('/'):
             self.push_prefix += '/'
 
-        self.use_tls = self.getConfig('use_tls')
+        self.push_retain = bool(self.getConfig('push_retain'))
+        self.use_tls = bool(self.getConfig('use_tls'))
 
         self.port = self.getConfig('broker_port')
         if not self.port:
@@ -96,7 +97,7 @@ class MqttPushkin(Pushkin):
                     topic=self.push_prefix + pushkey,
                     payload=payload,
                     qos=1,
-                    retain=True,
+                    retain=self.push_retain,
                 )
         else:
             # there is no connection to publish the notifications
@@ -105,7 +106,7 @@ class MqttPushkin(Pushkin):
                 {'topic': self.push_prefix + pushkey,
                  'payload': payload,
                  'qos': 1,
-                 'retain': True}
+                 'retain': self.push_retain}
                 for pushkey in pushkeys]
 
             mqtt_publish.multiple(msgs,

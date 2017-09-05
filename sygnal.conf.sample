@@ -17,8 +17,8 @@ com.example.myapp.mqtt.push_prefix = mpush/<username>
 
 ; the following parameters are not required
 ; default: False
+com.example.myapp.mqtt.daemonize = True
+com.example.myapp.mqtt.push_retain = True
 com.example.myapp.mqtt.use_tls = True
 ; default: 1883 or 8883
 com.example.myapp.mqtt.broker_port = 8883
-; If you want to establish a permanent connection to the broker (default: False)
-com.example.myapp.mqtt.daemonize = True
