@@ -34,6 +34,7 @@ class MqttPushkin(Pushkin):
 
     def __init__(self, name):
         super(MqttPushkin, self).__init__(name)
+        self.client = None
 
     @staticmethod
     def on_connect(client, userdata, flags, rc):
@@ -49,7 +50,7 @@ class MqttPushkin(Pushkin):
         self.username = self.getConfig('broker_user')
         self.password = self.getConfig('broker_pass')
         if not self.username or not self.password:
-            raise PushkinSetupException("No Credentials for Broker set in config")
+            logger.warn("No Credentials for Broker set in config")
 
         self.push_prefix = self.getConfig('push_prefix')
         if not self.push_prefix:
@@ -62,12 +63,13 @@ class MqttPushkin(Pushkin):
 
         self.port = self.getConfig('broker_port')
         if not self.port:
-            self.port = 8883 if use_tls else 1883
+            self.port = 8883 if self.use_tls else 1883
 
         if self.getConfig('daemonize'):
             logger.info("Start daemonized mqtt client")
             self.client = mqtt.Client()
-            self.client.username_pw_set(self.username, self.password)
+            if self.username:
+                self.client.username_pw_set(self.username, self.password)
             self.client.on_connect = MqttPushkin.on_connect
 
             if self.use_tls:
@@ -106,10 +108,10 @@ class MqttPushkin(Pushkin):
                  'retain': True}
                 for pushkey in pushkeys]
 
-            mqttp_publish.multiple(msgs,
+            mqtt_publish.multiple(msgs,
                 hostname=self.broker,
                 port=self.port,
-                auto={'username': self.username, 'password': self.password},
+                auth={'username': self.username, 'password': self.password},
                 tls={'ca_certs':TLS_CA_FILE} if self.use_tls else None,
             )
 
